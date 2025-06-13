@@ -5,6 +5,10 @@ const UserController = require('../controller/UsersController');
 const AuthController = require('../controller/AuthController');
 const EventsController = require('../controller/EventsController');
 
+router.get('/login', AuthController.index);
+router.post('/login', AuthController.login);
+router.post('/logout', AuthController.logout);
+
 router.get('/roles', RolesController.index);
 router.post('/roles', RolesController.store);
 router.get('/roles/:id', RolesController.show);
@@ -20,8 +24,6 @@ router.delete('/users/:id', UserController.destroy);
 router.get('/events', EventsController.index);
 router.post('/events', EventsController.store);
 
-router.get('/login', AuthController.index);
-router.post('/login', AuthController.login);
 router.get('/events/:id', EventsController.show);
 router.put('/events/:id', EventsController.update);
 router.delete('/events/:id', EventsController.destroy);

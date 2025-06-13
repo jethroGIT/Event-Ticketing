@@ -14,7 +14,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // Validasi input terlebih dahulu
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -36,5 +35,19 @@ class AuthController extends Controller
             'error' => 'Login failed',
             'details' => $response->json()
         ], $response->status());
+    }
+
+    function logout()
+    {
+        // Kirim request ke API untuk logout
+        $response = Http::post('http://localhost:8000/api/logout');
+
+        // Periksa jika request berhasil
+        if ($response->successful()) {
+            return redirect()->route('login')->with('success', 'Logout successful');
+        }
+
+        // Handle error
+        return redirect()->back()->withErrors(['error' => 'Logout failed']);
     }
 }

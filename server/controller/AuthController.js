@@ -10,6 +10,7 @@ const login = async (req, res) => {
 
     if (!email || !password) {
         console.error('Username dan Password tidak boleh kosong');
+        return res.status(401).json({ success: false, message: 'Username dan Password tidak boleh kosong' });
         return res.redirect('/login');
     }
 
@@ -48,4 +49,14 @@ const login = async (req, res) => {
     }
 };
 
-export { index, login };
+const logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Gagal logout:', err);
+            return res.status(500).json({ success: false, message: 'Gagal logout' });
+        }
+        res.redirect('/login');
+    });
+}
+
+export { index, login, logout };

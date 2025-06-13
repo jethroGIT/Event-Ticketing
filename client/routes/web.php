@@ -19,7 +19,9 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::get('/', [DashboardController::class, 'index'])->name('home');
+Route::get('/', [AuthController::class, 'index']);
+Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
 Route::get('/roles', [RolesController::class, 'index'])->name('roles.index');
 Route::post('/roles', [RolesController::class, 'store'])->name('roles.store');
@@ -34,13 +36,16 @@ Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
-// Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+Route::post('/events', [EventController::class, 'store'])->name('events.store');
+Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+Route::put('/events/{id}', [EventController::class, 'update'])->name('events.update');
+Route::delete('/events/{id}', [EventController::class, 'destroy'])->name('events.destroy');
 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/login', [AuthController::class, 'index'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
 
 
 

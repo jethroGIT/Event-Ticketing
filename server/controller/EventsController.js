@@ -14,7 +14,7 @@ const index = async (req, res) => {
     });
 
     res.json(events);
-    
+
   } catch (error) {
     console.error(error);
     res.status(500).send('Terjadi kesalahan saat mengambil data events.');
@@ -22,20 +22,20 @@ const index = async (req, res) => {
 }
 
 const store = async (req, res) => {
-    try {
-        const { nama_event, start_event, end_event, lokasi, narasumber, poster_url, deskripsi, biaya_registrasi, maks_peserta, created_by } = req.body;
-    
-        if (!nama_event || !start_event || !end_event || !lokasi || !narasumber || !poster_url || !deskripsi || !biaya_registrasi || !maks_peserta) {
-        return res.status(400).json({ message: 'Data tidak boleh kosong.' });
-        }
-    
-        await Events.create({ nama_event, start_event, end_event, lokasi, narasumber, poster_url, deskripsi, biaya_registrasi, maks_peserta, created_by });
-        res.json({ message: 'Event berhasil dibuat.' });
-        res.redirect('/events');
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Gagal menyimpan event baru.' });
+  try {
+    const { nama_event, start_event, end_event, lokasi, narasumber, poster_url, deskripsi, biaya_registrasi, maks_peserta, created_by } = req.body;
+
+    if (!nama_event || !start_event || !end_event || !lokasi || !narasumber || !poster_url || !deskripsi || !biaya_registrasi || !maks_peserta) {
+      return res.status(400).json({ message: 'Data tidak boleh kosong.' });
     }
+
+    await Events.create({ nama_event, start_event, end_event, lokasi, narasumber, poster_url, deskripsi, biaya_registrasi, maks_peserta, created_by });
+    res.json({ message: 'Event berhasil dibuat.' });
+    res.redirect('/events');
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Gagal menyimpan event baru.' });
+  }
 }
 
 const show = async (req, res) => {
@@ -58,7 +58,7 @@ const show = async (req, res) => {
       success: true,
       data: event
     });
-    
+
   } catch (error) {
     console.error(error);
     res.status(500).send('Terjadi kesalahan saat mengambil data event.');
@@ -66,54 +66,54 @@ const show = async (req, res) => {
 }
 
 const update = async (req, res) => {
-    const { id } = req.params;
-    const { nama_event, start_event, end_event, lokasi, narasumber, poster_url, deskripsi, biaya_registrasi, maks_peserta } = req.body;
-    
-    try {
-        const event = await Events.findByPk(id);
-    
-        if (!event) {
-        return res.status(404).json({ message: 'Event tidak ditemukan.' });
-        }
-    
-        await event.update({ 
-            nama_event, 
-            start_event, 
-            end_event, 
-            lokasi, 
-            narasumber, 
-            poster_url, 
-            deskripsi, 
-            biaya_registrasi, 
-            maks_peserta 
-        });
-    
-        res.json({ message: 'Event berhasil diperbarui.' });
-        
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Terjadi kesalahan saat memperbarui data event.');
+  const { id } = req.params;
+  const { nama_event, start_event, end_event, lokasi, narasumber, poster_url, deskripsi, biaya_registrasi, maks_peserta } = req.body;
+
+  try {
+    const event = await Events.findByPk(id);
+
+    if (!event) {
+      return res.status(404).json({ message: 'Event tidak ditemukan.' });
     }
+
+    await event.update({
+      nama_event,
+      start_event,
+      end_event,
+      lokasi,
+      narasumber,
+      poster_url,
+      deskripsi,
+      biaya_registrasi,
+      maks_peserta
+    });
+
+    res.json({ message: 'Event berhasil diperbarui.' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Terjadi kesalahan saat memperbarui data event.');
+  }
 }
 
 const destroy = async (req, res) => {
-    const { id } = req.params;
-    
-    try {
-        const event = await Events.findByPk(id);
-    
-        if (!event) {
-        return res.status(404).json({ message: 'Event tidak ditemukan.' });
-        }
-    
-        await event.destroy();
-    
-        res.json({ message: 'Event berhasil dihapus.' });
-        
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Terjadi kesalahan saat menghapus data event.');
+  const { id } = req.params;
+
+  try {
+    const event = await Events.findByPk(id);
+
+    if (!event) {
+      return res.status(404).json({ message: 'Event tidak ditemukan.' });
     }
+
+    await event.destroy();
+
+    res.json({ message: 'Event berhasil dihapus.' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Terjadi kesalahan saat menghapus data event.');
+  }
 }
 
 module.exports = {
