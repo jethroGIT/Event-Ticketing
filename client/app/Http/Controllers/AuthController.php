@@ -14,40 +14,35 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // Kirim request ke API
         $response = Http::post('http://localhost:8000/api/login', [
             'email' => $request->email,
             'password' => $request->password,
         ]);
 
-        // Periksa jika request berhasil
-        if ($response->successful()) {
-            return $response->json();
-        }
+        $data = $response->json();
 
-        // Handle error
-        return response()->json([
-            'error' => 'Login failed',
-            'details' => $response->json()
-        ], $response->status());
+        if (isset($data['token'])) {
+            session([
+                'token' => $data['token'],
+                'user' => $data['data'],
+            ]);
+
+            return redirect()->route('dashboard')->with('success', $response->json()['message']);
+        }
+        
+        return redirect()->back()->withErrors(['errors' => $data['message']]);
     }
 
-    function logout()
+    public function logout()
     {
-        // Kirim request ke API untuk logout
-        $response = Http::post('http://localhost:8000/api/logout');
+        session()->forget(['token', 'user']);
+        return redirect('/login');
 
-        // Periksa jika request berhasil
-        if ($response->successful()) {
-            return redirect()->route('login')->with('success', 'Logout successful');
-        }
-
-        // Handle error
         return redirect()->back()->withErrors(['error' => 'Logout failed']);
     }
 }

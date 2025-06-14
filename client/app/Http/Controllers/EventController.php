@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,9 +13,10 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
+        $token = session('token');
         $search = $request->input('search');
 
-        $response = Http::get('http://localhost:8000/api/events', [
+        $response = Http::withToken($token)->get('http://localhost:8000/api/events', [
             'nama_event' => $search
         ]);
 
@@ -58,7 +58,8 @@ class EventController extends Controller
             'deskripsi' => $request->deskripsi,
             'biaya_registrasi' => $request->biaya_registrasi,
             'maks_peserta' => $request->maks_peserta,
-            'created_by' => 1 //Auth::user()->id,
+            'created_by' => session('user.id')
+,
         ]);
 
         if ($response->failed()) {

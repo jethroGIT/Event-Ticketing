@@ -1,4 +1,5 @@
 // controllers/userController.js
+const bcrypt = require('bcrypt');
 const { Op } = require("sequelize");
 const { Users, Roles } = require('../models');
 
@@ -41,7 +42,15 @@ const store = async (req, res) => {
         return res.status(400).json({message: 'Email sudah ada dalam database.'});
         }
     
-        await Users.create({ role_id, email, password, nama, alamat, no_tlp, status });
+        await Users.create({ 
+          role_id, 
+          email, 
+          password: bcrypt.hashSync(password, 10),
+          nama, 
+          alamat, 
+          no_tlp, 
+          status 
+        });
     
         res.redirect('/users');
     } catch (error) {
@@ -102,7 +111,7 @@ const update = async (req, res) => {
     await user.update({ 
       role_id: req.body.role_id, 
       email: req.body.email, 
-      password: req.body.password, 
+      password: bcrypt.hashSync(password, 10), 
       nama: req.body.nama, 
       alamat: req.body.alamat, 
       no_tlp: req.body.no_tlp, 

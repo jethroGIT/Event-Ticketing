@@ -12,9 +12,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $token = session('token');
         $search = $request->input('search');
 
-        $response = Http::get('http://localhost:8000/api/users', [
+        $response = Http::withToken($token)->get('http://localhost:8000/api/users', [
             'email' => $search
         ]);
 

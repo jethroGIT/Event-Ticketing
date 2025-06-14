@@ -1,5 +1,8 @@
 import bcrypt from 'bcrypt';
 import { Users } from '../models/index.js';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const index = (req, res) => {
     res.render('auth/index');
@@ -11,41 +14,50 @@ const login = async (req, res) => {
     if (!email || !password) {
         console.error('Username dan Password tidak boleh kosong');
         return res.status(401).json({ success: false, message: 'Username dan Password tidak boleh kosong' });
-        return res.redirect('/login');
     }
 
     try {
         const user = await Users.findOne({ where: { email } });
 
         if (!user) {
-            console.error('Username atau Password salah');
-            return res.redirect('/api/login');
+            console.error('Email tidak ditemukan');
+            return res.status(401).json({ success: false, message: 'Email tidak ditemukan!' });
         }
 
-        const match = password === user.password;
+        const match = await bcrypt.compare(password, user.password);
 
         if (match) {
+            const payload = {
+                id: user.id,
+                role: user.role_id,
+                email: user.email,
+                status: user.status,
+            }
+            const secret = process.env.JWT_SECRET;
+            const expiresIn = '1h';
+            const token = jwt.sign(payload, secret, { expiresIn });
+
             return res.json({
                 success: true,
-                message: 'Selamat Datang ' + user.email,
+                message: 'Selamat Datang ' + user.nama,
                 data: {
                     id: user.id,
-                    email: user.email,
                     role: user.role_id,
+                    email: user.email,
                     nama: user.nama,
                     alamat: user.alamat,
                     no_tlp: user.no_tlp,
                     status: user.status,
-                }
+                },
+                token: token
             });
         } else {
-            console.error('Username atau Password salah');
-            return res.status(401).json({ success: false, message: 'Username atau Password salah' });
+            console.error('Password salah');
+            return res.status(401).json({ success: false, message: 'Password salah!' });
         }
     } catch (err) {
         console.error(err);
-        console.error('Terjadi kesalahan');
-        return res.redirect('/api/login');
+        return res.status(500).json({ success: false, message: 'Terjadi kesalahan' });
     }
 };
 
@@ -55,7 +67,6 @@ const logout = (req, res) => {
             console.error('Gagal logout:', err);
             return res.status(500).json({ success: false, message: 'Gagal logout' });
         }
-        res.redirect('/login');
     });
 }
 

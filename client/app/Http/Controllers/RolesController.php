@@ -12,9 +12,10 @@ class RolesController extends Controller
      */
     public function index(Request $request)
     {
+        $token = session('token');
         $nama_role = $request->input('search');
 
-        $response = Http::get('http://localhost:8000/api/roles', [
+        $response = Http::withToken($token)->get('http://localhost:8000/api/roles', [
             'nama_role' => $nama_role
         ]);
 

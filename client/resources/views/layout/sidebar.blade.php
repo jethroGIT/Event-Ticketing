@@ -81,7 +81,7 @@
 
             <!-- Logout -->
             <li class="nav-item">
-                <form method="POST" action="">
+                <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"
                         class="flex items-center w-full p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group">
