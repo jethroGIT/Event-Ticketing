@@ -69,7 +69,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $response = Http::get("http://localhost:8000/api/users/{$id}");
+        $token = session('token');
+        $response = Http::withToken($token)->get("http://localhost:8000/api/users/{$id}");
         $user = (object)$response['data'];
 
         return view('users.show', compact('user'));

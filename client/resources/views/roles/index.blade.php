@@ -8,7 +8,7 @@
                 <h1 class="text-3xl font-bold text-indigo-800">Manajemen Role</h1>
                 <p class="text-gray-600">Sistem pengelolaan data role pengguna</p>
             </div>
-            <button onclick="openAddModal()"
+            <button onclick="openModal('addModal')"
                 class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
@@ -57,12 +57,13 @@
                                             Edit
                                         </button>
 
-                                        <form action="{{ route('roles.destroy', $role['id']) }}" method="POST"
-                                            onsubmit="return confirm('Yakin ingin menghapus role ini?')">
+                                        <form id="delete-form-{{ $role['id'] }}"
+                                            action="{{ route('roles.destroy', ['id' => $role['id']]) }}" 
+                                            method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit"
-                                                class="flex items-center text-red-600 hover:text-red-900">
+                                            <button type="button" onclick="confirmDelete({{ $role['id'] }})"
+                                                class="flex items-center text-red-600 hover:text-indigo-900">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
                                                     viewBox="0 0 20 20" fill="currentColor">
                                                     <path fill-rule="evenodd"
@@ -87,7 +88,12 @@
         <div class="bg-white rounded-xl p-6 w-full max-w-md">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold">Tambah Role</h2>
-                <button onclick="closeAddModal()" class="text-gray-500 hover:text-gray-700">X</button>
+                <button onclick="closeModal('addModal')" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
             <form action="{{ route('roles.store') }}" method="POST">
                 @csrf
@@ -97,7 +103,7 @@
                         class="w-full border border-gray-300 rounded-lg p-2 mt-1">
                 </div>
                 <div class="flex justify-end space-x-2">
-                    <button type="button" onclick="closeAddModal()"
+                    <button type="button" onclick="closeModal('addModal')"
                         class="px-4 py-2 text-gray-700 border rounded-lg">Batal</button>
                     <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Simpan</button>
                 </div>
@@ -110,7 +116,12 @@
         <div class="bg-white rounded-xl p-6 w-full max-w-md">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold">Edit Role</h2>
-                <button onclick="closeEditModal()" class="text-gray-500 hover:text-gray-700">X</button>
+                <button onclick="closeModal('editModal')" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
             <form id="editRoleForm" method="POST">
                 @csrf
@@ -121,7 +132,7 @@
                         class="w-full border border-gray-300 rounded-lg p-2 mt-1">
                 </div>
                 <div class="flex justify-end space-x-2">
-                    <button type="button" onclick="closeEditModal()"
+                    <button type="button" onclick="closeModal('editModal')"
                         class="px-4 py-2 text-gray-700 border rounded-lg">Batal</button>
                     <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Simpan</button>
                 </div>
@@ -132,13 +143,34 @@
 
 @section('ExtraJS')
     <script>
-        function openAddModal() {
-            document.getElementById('addModal').classList.remove('hidden');
-            document.getElementById('addModal').classList.add('flex');
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+            }
         }
 
-        function closeAddModal() {
-            document.getElementById('addModal').classList.add('hidden');
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        window.onclick = function(event) {
+            const editModal = document.getElementById('editModal');
+            const addModal = document.getElementById('addModal');
+
+            if (event.target === editModal) {
+                closeModal('editModal');
+            }
+            if (event.target === addModal) {
+                closeModal('addModal');
+            }
         }
 
         function openEditModal(id, nama) {
@@ -149,8 +181,24 @@
             form.action = `/roles/${id}`;
         }
 
-        function closeEditModal() {
-            document.getElementById('editModal').classList.add('hidden');
+        function confirmDelete(rolesId) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Sesi ini akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#EF4444',
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    popup: 'rounded-xl'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + rolesId).submit();
+                }
+            });
         }
     </script>
 @endsection

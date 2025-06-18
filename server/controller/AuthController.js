@@ -34,7 +34,7 @@ const login = async (req, res) => {
                 status: user.status,
             }
             const secret = process.env.JWT_SECRET;
-            const expiresIn = '1h';
+            const expiresIn = '24h';
             const token = jwt.sign(payload, secret, { expiresIn });
 
             return res.json({

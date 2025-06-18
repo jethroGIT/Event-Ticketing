@@ -47,6 +47,15 @@
             </a>
         </li>
 
+        <!-- Venues -->
+        <li class="nav-item">
+            <a href=""
+                class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('attendances.*') ? 'bg-blue-500/30' : '' }}">
+                <i class="bi bi-person-check mr-3 text-lg group-hover:text-blue-100"></i>
+                <span class="font-medium">Registrasi</span>
+            </a>
+        </li>
+
         <!-- Tickets -->
         <li class="nav-item">
             <a href=""

@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,12 @@ Route::middleware('checkLogin')->group(function () {
     Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
     Route::put('/events/{id}', [EventController::class, 'update'])->name('events.update');
     Route::delete('/events/{id}', [EventController::class, 'destroy'])->name('events.destroy');
+
+    Route::get('/events/{id}/sessions', [EventSessionController::class, 'index'])->name('sessions.index');
+    Route::post('/events/{id}/sessions', [EventSessionController::class, 'store'])->name('sessions.store');
+    Route::put('/events/sessions/{id}', [EventSessionController::class, 'update'])->name('sessions.update');
+    Route::delete('/events/sessions/{id}', [EventSessionController::class, 'destroy'])->name('sessions.destroy');
+    
 });
 
 
