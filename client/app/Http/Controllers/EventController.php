@@ -98,7 +98,7 @@ class EventController extends Controller
             'deskripsi' => $request->deskripsi,
             'biaya_registrasi' => $request->biaya_registrasi,
             'maks_peserta' => $request->maks_peserta,
-            'created_by' => 1 //Auth::user()->id,
+            'created_by' => session('user.id')
         ]);
 
         if ($response->failed()) {

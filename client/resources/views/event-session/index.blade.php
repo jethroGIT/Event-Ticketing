@@ -7,7 +7,11 @@
         <div class="flex flex-col md:flex-row justify-between items-center mb-8">
             <div class="mb-4 md:mb-0">
                 <h1 class="text-3xl font-bold text-indigo-800">Manajemen Sesi Event</h1>
-                <p class="text-gray-600 mt-1">Sistem Pengelolaan Sesi Event {{ $id }}</p>
+                @if (!empty($sessions))
+                    <p class="text-gray-600 mt-1">Sistem Pengelolaan Sesi Event {{ $sessions[0]['Events']['nama_event'] }}</p>
+                @else
+                    <p class="text-gray-600 mt-1">Tidak ada sesi untuk event ini.</p>
+                @endif
             </div>
 
             <button onclick="openModal('addModal')"

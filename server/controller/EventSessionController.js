@@ -1,11 +1,16 @@
 const { Op } = require("sequelize");
-const { EventSession } = require('../models');
+const { Events, EventSession } = require('../models');
 
 const getByEventId = async (req, res) => {
     const { event_id } = req.params;
     try {
         const eventSessions = await EventSession.findAll({
-            where: { event_id }
+            where: { event_id },
+            include: [{
+                model: Events,
+                as: 'Events',
+                attributes: ['id', 'nama_event']
+            }],
         });
         
         if (eventSessions.length === 0) {

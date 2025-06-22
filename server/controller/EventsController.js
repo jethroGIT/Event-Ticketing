@@ -31,7 +31,7 @@ const store = async (req, res) => {
 
     await Events.create({ nama_event, start_event, end_event, lokasi, narasumber, poster_url, deskripsi, biaya_registrasi, maks_peserta, created_by });
     res.json({ message: 'Event berhasil dibuat.' });
-    res.redirect('/events');
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Gagal menyimpan event baru.' });

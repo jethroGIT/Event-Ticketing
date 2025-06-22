@@ -3,6 +3,9 @@ const Users = require('./Users')(sequelize, Sequelize.DataTypes);
 const Roles = require('./Roles')(sequelize, Sequelize.DataTypes);
 const Events = require('./Events')(sequelize, Sequelize.DataTypes);
 const EventSession = require('./EventSession')(sequelize, Sequelize.DataTypes);
+const Registrasi = require('./Registrasi')(sequelize, Sequelize.DataTypes);
+const Pembayaran = require('./Pembayaran')(sequelize, Sequelize.DataTypes);
+const Tiket = require('./Tiket')(sequelize, Sequelize.DataTypes);
 console.log(sequelize.models);
 
 
@@ -15,6 +18,8 @@ Users.belongsTo(Roles, {
   foreignKey: 'role_id',
   as: 'Role'
 });
+
+// ================ //
 
 Events.belongsTo(Users, {
   foreignKey: 'created_by',
@@ -30,12 +35,61 @@ EventSession.belongsTo(Events, {
   foreignKey: 'event_id',
   as: 'Events'
 });
-  
+
+// ================ //
+
+Users.hasMany(Registrasi, {
+  foreignKey: 'user_id',
+  as: 'Registrasi'
+});
+
+Registrasi.belongsTo(Users, {
+  foreignKey: 'user_id',
+  as: 'User'
+});
+
+// ================ //
+
+Registrasi.hasMany(Pembayaran, {
+  foreign_key: 'regis_id',
+  as: 'Pembayaran'
+});
+
+Pembayaran.belongsTo(Registrasi, {
+  foreign_key: 'regis_id',
+  as: 'Registrasi'
+});
+
+// ================ //
+
+Registrasi.hasMany(Tiket, {
+  foreign_key: 'regis_id',
+  as: 'Tiket'
+});
+
+Tiket.belongsTo(Registrasi, {
+  foreign_key: 'regis_id',
+  as: 'Registrasi'
+});
+
+Tiket.belongsTo(EventSession, {
+  foreign_key: 'session_id',
+  as: 'EventSessions'
+})
+
+EventSession.hasMany(Tiket, {
+  foreign_key: 'session_id',
+  as: 'Tiket'
+})
+
 module.exports = {
   sequelize,  // Koneksi database
   Sequelize,  // Kelas Sequelize
   Roles,
   Users,
-  Events,     // Model yang sudah di-inject
-  EventSession, // Model untuk sesi acara
+  Events,     
+  EventSession,
+  Registrasi,
+  Tiket,
+  Pembayaran
 };
