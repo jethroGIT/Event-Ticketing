@@ -63,7 +63,6 @@ const Konfirmasi = async (req, res) => {
     }
 }
 
-
 const konfirmasiPendaftaran = async (req, res) => {
     try {
         const { regis_id, sesi_id, tipe_pembayaran, bukti_pembayaran } = req.body;
@@ -94,10 +93,26 @@ const konfirmasiPendaftaran = async (req, res) => {
     }
 }
 
+const destroyKonfirmasi = async (req, res) => {
+    try {
+        const regis_id = req.params.regis_id;
+
+        const registrasi_data = await Registrasi.findByPk(regis_id);
+
+        await registrasi_data.destroy();
+
+        res.status(200).json({ message: 'Regristasi berhasil dibatalkan' })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Terjadi kesalahan saat menghapus data' })
+    }
+}
+
 
 module.exports = {
     EventTersedia,
     RegistrasiEvent,
     Konfirmasi,
-    konfirmasiPendaftaran
+    konfirmasiPendaftaran,
+    destroyKonfirmasi
 };

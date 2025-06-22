@@ -41,5 +41,6 @@ router.get('/registrasi', RegistrasiController.EventTersedia);
 router.post('/registrasi', RegistrasiController.RegistrasiEvent);
 router.get('/registrasi/event/:event_id', RegistrasiController.Konfirmasi);
 router.post('/registrasi/konfirmasi', RegistrasiController.konfirmasiPendaftaran);
+router.delete('/registrasi/event/:regis_id', RegistrasiController.destroyKonfirmasi);
 
 module.exports = router;

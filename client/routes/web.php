@@ -56,6 +56,8 @@ Route::middleware('checkLogin')->group(function () {
     Route::post('/registrasi', [RegistrasiController::class, 'registrasi'])->name('registrasi');
     Route::get('/registrasi/{id}/event/{event_id}', [RegistrasiController::class, 'konfirmasi'])->name('registrasi.pembayaran');
     Route::post('/registrasi/{id}/event', [RegistrasiController::class, 'storePembayaran'])->name('registrasi.store');
+    Route::delete('/registrasi/{id}/event', [RegistrasiController::class, 'destroyKonfirmasi'])->name('registrasi.destroy');
+    
 });
 
 

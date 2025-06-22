@@ -55,6 +55,7 @@ class RegistrasiController extends Controller
         ]);
     }
 
+    
     /**
      * Display the specified resource.
      */
@@ -65,7 +66,7 @@ class RegistrasiController extends Controller
             'tipe_pembayaran' => 'required',
             'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
-
+        
         $regis_id = $request->input('regis_id');
         $sesi_ids = $request->input('sesi_id');
         $tipe_pembayaran = $request->input('tipe_pembayaran');
@@ -74,7 +75,7 @@ class RegistrasiController extends Controller
         if ($request->hasFile('bukti_pembayaran')) {
             $buktiPembayaran = base64_encode(file_get_contents($request->file('bukti_pembayaran')->getRealPath()));
         }
-
+        
         try {
             $response = Http::post('http://localhost:8000/api/registrasi/konfirmasi', [
                 'regis_id' => $regis_id,
@@ -93,11 +94,9 @@ class RegistrasiController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroyKonfirmasi($regis_id)
     {
-        //
+        $responseDestroy = Http::delete("http://localhost:8000/api/registrasi/event/{$regis_id}");    // 
+        return redirect()->route('registrasi.index')->with('success', $responseDestroy->json('message'));
     }
 }
