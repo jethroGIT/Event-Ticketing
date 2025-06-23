@@ -8,6 +8,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventSessionController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\RegistrasiController;
 
 /*
@@ -57,6 +58,9 @@ Route::middleware('checkLogin')->group(function () {
     Route::get('/registrasi/{id}/event/{event_id}', [RegistrasiController::class, 'konfirmasi'])->name('registrasi.pembayaran');
     Route::post('/registrasi/{id}/event', [RegistrasiController::class, 'storePembayaran'])->name('registrasi.store');
     Route::delete('/registrasi/{id}/event', [RegistrasiController::class, 'destroyKonfirmasi'])->name('registrasi.destroy');
+
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::delete('/orders/{order_id}', [OrderController::class, 'cancel'])->name('orders.cancel');
     
 });
 

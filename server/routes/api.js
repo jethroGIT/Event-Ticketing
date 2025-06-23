@@ -8,6 +8,7 @@ const AuthController = require('../controller/AuthController');
 const EventsController = require('../controller/EventsController');
 const EventSessionController = require('../controller/EventSessionController');
 const RegistrasiController = require('../controller/RegistrasiController');
+const OrderController = require('../controller/OrderController');
 
 router.get('/login', AuthController.index);
 router.post('/login', AuthController.login);
@@ -42,5 +43,8 @@ router.post('/registrasi', RegistrasiController.RegistrasiEvent);
 router.get('/registrasi/event/:event_id', RegistrasiController.Konfirmasi);
 router.post('/registrasi/konfirmasi', RegistrasiController.konfirmasiPendaftaran);
 router.delete('/registrasi/event/:regis_id', RegistrasiController.destroyKonfirmasi);
+
+router.get('/orders', OrderController.getDetailPesanan);
+router.delete('/orders/:regis_id', OrderController.destroyPesanan);
 
 module.exports = router;

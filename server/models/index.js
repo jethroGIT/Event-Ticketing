@@ -51,34 +51,34 @@ Registrasi.belongsTo(Users, {
 // ================ //
 
 Registrasi.hasMany(Pembayaran, {
-  foreign_key: 'regis_id',
+  foreignKey: 'regis_id',
   as: 'Pembayaran'
 });
 
 Pembayaran.belongsTo(Registrasi, {
-  foreign_key: 'regis_id',
+  foreignKey: 'regis_id',
   as: 'Registrasi'
 });
 
 // ================ //
 
 Registrasi.hasMany(Tiket, {
-  foreign_key: 'regis_id',
+  foreignKey: 'regis_id',
   as: 'Tiket'
 });
 
 Tiket.belongsTo(Registrasi, {
-  foreign_key: 'regis_id',
+  foreignKey: 'regis_id',
   as: 'Registrasi'
 });
 
 Tiket.belongsTo(EventSession, {
-  foreign_key: 'session_id',
+  foreignKey: 'session_id',
   as: 'EventSessions'
 })
 
 EventSession.hasMany(Tiket, {
-  foreign_key: 'session_id',
+  foreignKey: 'session_id',
   as: 'Tiket'
 })
 
