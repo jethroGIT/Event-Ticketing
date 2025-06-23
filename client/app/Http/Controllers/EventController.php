@@ -48,18 +48,36 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'nama_event' => 'required|string|max:255',
+            'start_event' => 'required|date',
+            'end_event' => 'required|date|after_or_equal:start_event',
+            'lokasi' => 'required|string|max:255',
+            'narasumber' => 'required|string|max:255',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'deskripsi' => 'nullable|string',
+            'biaya_registrasi' => 'nullable|numeric|min:0',
+            'maks_peserta' => 'nullable|integer|min:1'
+        ]);
+
+        $posterPath = null;
+        if ($request->hasFile('poster')) {
+            $file = $request->file('poster');
+            $originalName = $file->getClientOriginalName();
+            $posterPath = $file->storeAs('posters', $originalName, 'public');
+        }
+
         $response = Http::post('http://localhost:8000/api/events', [
             'nama_event' => $request->nama_event,
             'start_event' => $request->start_event,
             'end_event' => $request->end_event,
             'lokasi' => $request->lokasi,
             'narasumber' => $request->narasumber,
-            'poster_url' => $request->poster_url, // ? Storage::url($request->poster_url) : null,
+            'poster_url' => $posterPath ? Storage::url($posterPath) : null,
             'deskripsi' => $request->deskripsi,
             'biaya_registrasi' => $request->biaya_registrasi,
             'maks_peserta' => $request->maks_peserta,
-            'created_by' => session('user.id')
-,
+            'created_by' => session('user.id'),
         ]);
 
         if ($response->failed()) {
@@ -88,18 +106,54 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $response = Http::put("http://localhost:8000/api/events/{$id}", [
+        $request->validate([
+            'nama_event' => 'required|string|max:255',
+            'start_event' => 'required|date',
+            'end_event' => 'required|date|after_or_equal:start_event',
+            'lokasi' => 'required|string|max:255',
+            'narasumber' => 'required|string|max:255',
+            'poster' => 'nullable|image|max:2048', // max 2MB
+            'deskripsi' => 'nullable|string',
+            'biaya_registrasi' => 'nullable|numeric',
+            'maks_peserta' => 'nullable|integer'
+        ]);
+
+        $posterData = [];
+
+        if ($request->hasFile('poster')) {
+            // Hapus poster lama jika ada
+            if ($request->poster_url_lama) {
+                $oldFilename = basename($request->poster_url_lama);
+                Storage::delete('public/posters/' . $oldFilename);
+            }
+
+            // Simpan poster baru
+            $file = $request->file('poster');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('public/posters', $filename);
+
+            // Generate URL yang benar
+            $posterData['poster_url'] = asset('storage/posters/' . $filename);
+        } else {
+            $posterData['poster_url'] = $request->poster_url_lama;
+        }
+
+        $data = [
             'nama_event' => $request->nama_event,
             'start_event' => $request->start_event,
             'end_event' => $request->end_event,
             'lokasi' => $request->lokasi,
             'narasumber' => $request->narasumber,
-            'poster_url' => $request->poster_url, // ? Storage::url($request->poster_url) : null,
             'deskripsi' => $request->deskripsi,
             'biaya_registrasi' => $request->biaya_registrasi,
             'maks_peserta' => $request->maks_peserta,
             'created_by' => session('user.id')
-        ]);
+        ];
+
+        // Gabungkan data poster jika ada
+        $data = array_merge($data, $posterData);
+
+        $response = Http::put("http://localhost:8000/api/events/{$id}", $data);
 
         if ($response->failed()) {
             $errorMessage = $response->json('message');
