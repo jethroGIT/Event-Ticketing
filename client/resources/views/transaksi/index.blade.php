@@ -129,6 +129,36 @@
                                                 {{ $tiket['EventSessions']['Events']['lokasi'] }}
                                             </p>
                                         </div>
+
+                                        @if ($tiket['qr_token'])
+                                            <div class="mt-4" x-data="{ open: false }">
+                                                <p class="text-sm text-gray-600">Token QR:</p>
+                                                <img @click="open = true" src="{{ $tiket['qr_image'] }}" alt="QR Code"
+                                                    class="w-32 border rounded cursor-pointer hover:scale-105 transition transform duration-200"
+                                                    title="Klik untuk memperbesar">
+
+                                                <p class="text-sm font-medium text-gray-900 break-all mt-2">
+                                                    {{ $tiket['qr_token'] }}
+                                                </p>
+
+                                                <!-- Modal -->
+                                                <div x-show="open" x-transition
+                                                    class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+                                                    x-cloak @click.self="open = false">
+                                                    <div class="bg-white p-6 rounded-xl shadow-xl max-w-lg w-full relative">
+                                                        <button @click="open = false"
+                                                            class="absolute top-2 right-2 text-gray-600 hover:text-red-500 transition">
+                                                            ✖
+                                                        </button>
+                                                        <img src="{{ $tiket['qr_image'] }}" alt="QR Code Besar"
+                                                            class="w-full h-auto rounded">
+                                                        <p class="mt-4 text-center text-sm text-gray-600 break-all">
+                                                            {{ $tiket['qr_token'] }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+
                                     </div>
                                 @endforeach
                             </div>

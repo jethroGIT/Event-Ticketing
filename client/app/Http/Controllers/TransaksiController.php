@@ -16,7 +16,9 @@ class TransaksiController extends Controller
             'role' => $role,
         ]);
         $orders = $response->json();
-        return view('transaksi.index', ['orders' => $orders]);
+        return view('transaksi.index', [
+            'orders' => $orders,
+        ]);
     }
 
     public function cancel ($id) {

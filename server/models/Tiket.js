@@ -13,7 +13,11 @@ module.exports = (sequelize, DataTypes) => {
     regis_id: {
         type: DataTypes.INTEGER,
         allowNull: false
-    }
+    },
+    qr_token: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+    },
   }, {
     tableName: 'tiket',
     timestamps: true,

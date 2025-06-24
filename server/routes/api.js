@@ -9,6 +9,7 @@ const EventsController = require('../controller/EventsController');
 const EventSessionController = require('../controller/EventSessionController');
 const RegistrasiController = require('../controller/RegistrasiController');
 const OrderController = require('../controller/OrderController');
+const QrController = require('../controller/QrController');
 
 router.get('/login', AuthController.index);
 router.post('/login', AuthController.login);
@@ -49,5 +50,8 @@ router.put('/orders/:id', OrderController.updateTransaksi);
 
 router.get('/orders-ticket', OrderController.getDetailPesanan);
 router.delete('/orders-ticket/:regis_id', OrderController.destroyPesanan);
+
+
+router.post('/validasi-qr', QrController.validateQRCode);
 
 module.exports = router;
