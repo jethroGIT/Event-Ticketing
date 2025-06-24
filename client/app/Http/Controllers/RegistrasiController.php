@@ -64,7 +64,7 @@ class RegistrasiController extends Controller
         $validated = $request->validate([
             'sesi_id' => 'required|array|min:1',
             'tipe_pembayaran' => 'required',
-            'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'bukti_pembayaran' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
         
         $regis_id = $request->input('regis_id');
@@ -73,7 +73,10 @@ class RegistrasiController extends Controller
 
         $buktiPembayaran = null;
         if ($request->hasFile('bukti_pembayaran')) {
-            $buktiPembayaran = base64_encode(file_get_contents($request->file('bukti_pembayaran')->getRealPath()));
+            $file = $request->file('bukti_pembayaran');
+            $originalName = $file->getClientOriginalName();
+            $buktiPembayaran = $file->storeAs('bukti-pembayaran', $originalName, 'public');
+            $buktiPembayaran = asset('storage/' . $buktiPembayaran); // Convert to URL
         }
         
         try {
@@ -81,11 +84,11 @@ class RegistrasiController extends Controller
                 'regis_id' => $regis_id,
                 'sesi_id' => $sesi_ids,
                 'tipe_pembayaran' => $tipe_pembayaran,
-                'bukti_pembayaran' => $buktiPembayaran,
+                'bukti_pembayaran' => $buktiPembayaran ? $buktiPembayaran : null,
             ]);
 
             if ($response->successful()) {
-                return redirect()->route('registrasi.index')->with('success', $response->json('message'));
+                return redirect()->route('tickets.index')->with('success', $response->json('message'));
             } else {
                 return back()->with('error', 'Gagal mengirim data ke server.');
             }

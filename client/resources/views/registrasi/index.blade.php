@@ -72,11 +72,19 @@
                         <div class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-between">
                             <div>
                                 <h2 class="text-xl font-bold text-indigo-700 mb-2">{{ $event['nama_event'] }}</h2>
-                                <p class="text-sm text-gray-600 mb-1"><strong>Tanggal:</strong> {{ $startEvent->format('d M Y') }} - {{ $endEvent->format('d M Y') }}</p>
+                                <div class="mb-2">
+                                    <img src="{{ $event['poster_url'] }}" alt="Poster Saat Ini"
+                                        class="h-40 object-contain border rounded-md">
+                                </div>
+                                <p class="text-sm text-gray-600 mb-1"><strong>Tanggal:</strong>
+                                    {{ $startEvent->format('d M Y') }} - {{ $endEvent->format('d M Y') }}</p>
                                 <p class="text-sm text-gray-600 mb-1"><strong>Lokasi:</strong> {{ $event['lokasi'] }}</p>
-                                <p class="text-sm text-gray-600 mb-1"><strong>Narasumber:</strong> {{ $event['narasumber'] }}</p>
-                                <p class="text-sm text-gray-600 mb-1"><strong>Biaya:</strong> Rp{{ number_format($event['biaya_registrasi']) }}</p>
-                                <p class="text-sm text-gray-600 mb-1"><strong>Peserta Maksimal:</strong> {{ $event['maks_peserta'] }}</p>
+                                <p class="text-sm text-gray-600 mb-1"><strong>Narasumber:</strong>
+                                    {{ $event['narasumber'] }}</p>
+                                <p class="text-sm text-gray-600 mb-1"><strong>Biaya:</strong>
+                                    Rp{{ number_format($event['biaya_registrasi']) }}</p>
+                                <p class="text-sm text-gray-600 mb-1"><strong>Peserta Maksimal:</strong>
+                                    {{ $event['maks_peserta'] }}</p>
                                 <p class="text-sm text-gray-600 mb-1"><strong>Deskripsi:</strong></p>
                                 <p class="text-sm text-gray-600 mb-3">{{ $event['deskripsi'] }}</p>
                                 <div>
@@ -87,7 +95,8 @@
                                                 <li>
                                                     {{ $sesi['nama_sesi'] }} -
                                                     {{ \Carbon\Carbon::parse($sesi['tanggal'])->format('d M Y') }}
-                                                    ({{ substr($sesi['jam_mulai'], 0, 5) }} - {{ substr($sesi['jam_selesai'], 0, 5) }})
+                                                    ({{ substr($sesi['jam_mulai'], 0, 5) }} -
+                                                    {{ substr($sesi['jam_selesai'], 0, 5) }})
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -97,7 +106,7 @@
                                 </div>
                             </div>
 
-                            
+
                             <!-- Tombol Registrasi -->
                             <div class="mt-4">
                                 <form action="{{ route('registrasi') }}" method="POST">

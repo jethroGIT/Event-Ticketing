@@ -61,7 +61,16 @@
             <a href="{{ route('orders.index') }}"
                 class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('tickets.*') ? 'bg-blue-500/30' : '' }}">
                 <i class="bi bi-ticket-perforated mr-3 text-lg group-hover:text-blue-100"></i>
-                <span class="font-medium">Order</span>
+                <span class="font-medium">Tickets</span>
+            </a>
+        </li>
+
+        <!-- Orders -->
+        <li class="nav-item">
+            <a href="{{ route('tickets.index') }}"
+                class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('orders.*') ? 'bg-blue-500/30' : '' }}">
+                <i class="bi bi-cart mr-3 text-lg group-hover:text-blue-100"></i>
+                <span class="font-medium">Transaksi</span>
             </a>
         </li>
 

@@ -3,14 +3,17 @@ const { Registrasi, Pembayaran, Tiket, EventSession, Events } = require('../mode
 
 const getDetailPesanan = async (req, res) => {
     try {
-        const user_id = req.query.user_id;
+        const { user_id, role } = req.query;
+
+        const whereClause = {};
+
+        // Jika bukan role keuangan, filter berdasarkan user_id
+        if (role !== 'admin' && role !== 'keuangan') {
+            whereClause.user_id = { [Op.eq]: user_id };
+        }
 
         const orders = await Registrasi.findAll({
-            where: {
-                user_id: {
-                    [Op.eq]: user_id
-                }
-            },
+            where: whereClause,
             include: [
                 {
                     model: Pembayaran,
@@ -46,6 +49,51 @@ const getDetailPesanan = async (req, res) => {
     }
 };
 
+const logTransaksi = async (req, res) => {
+    try {
+        const pembayaran = await Registrasi.findAll({
+            include: [
+                {
+                    model: Pembayaran,
+                    as: 'Pembayaran',
+                    attributes: ['id', 'tipe_pembayaran', 'status_pembayaran', 'bukti_pembayaran'],
+                },
+                {
+                    model: Tiket,
+                    as: 'Tiket',
+                    attributes: ['id', 'session_id']
+                }
+            ]
+        });
+
+        res.status(200).json(pembayaran);
+    } catch (error) {   
+        console.error(error);
+        res.status(500).json({ message: 'Terjadi kesalahan saat mengkonfirmasi pembayaran' });
+    }
+};
+
+const updateTransaksi = async (req, res) => {
+    try {
+        const pembayaranId = req.params.id;
+        const { status_pembayaran } = req.body;
+
+        const pembayaran = await Pembayaran.findByPk(pembayaranId);
+        if (!pembayaran) {
+            return res.status(404).json({ message: 'Pembayaran tidak ditemukan' });
+        }
+
+        await pembayaran.update({
+            status_pembayaran
+        });
+
+        res.status(200).json({ message: 'Status pembayaran berhasil diperbarui' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Terjadi kesalahan saat mengupdate transaksi' });
+    }
+}
+
 const destroyPesanan = async (req, res) => {
     try {
         const regis_id = req.params.regis_id;
@@ -64,5 +112,7 @@ const destroyPesanan = async (req, res) => {
 
 module.exports = {
     getDetailPesanan,
-    destroyPesanan
+    destroyPesanan,
+    logTransaksi,
+    updateTransaksi
 };

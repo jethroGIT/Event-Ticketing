@@ -112,7 +112,7 @@ class EventController extends Controller
             'end_event' => 'required|date|after_or_equal:start_event',
             'lokasi' => 'required|string|max:255',
             'narasumber' => 'required|string|max:255',
-            'poster' => 'nullable|image|max:2048', // max 2MB
+            'poster' => 'nullable|image|max:2048',
             'deskripsi' => 'nullable|string',
             'biaya_registrasi' => 'nullable|numeric',
             'maks_peserta' => 'nullable|integer'

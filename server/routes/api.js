@@ -44,7 +44,10 @@ router.get('/registrasi/event/:event_id', RegistrasiController.Konfirmasi);
 router.post('/registrasi/konfirmasi', RegistrasiController.konfirmasiPendaftaran);
 router.delete('/registrasi/event/:regis_id', RegistrasiController.destroyKonfirmasi);
 
-router.get('/orders', OrderController.getDetailPesanan);
-router.delete('/orders/:regis_id', OrderController.destroyPesanan);
+router.get('/orders', OrderController.logTransaksi);
+router.put('/orders/:id', OrderController.updateTransaksi);
+
+router.get('/orders-ticket', OrderController.getDetailPesanan);
+router.delete('/orders-ticket/:regis_id', OrderController.destroyPesanan);
 
 module.exports = router;

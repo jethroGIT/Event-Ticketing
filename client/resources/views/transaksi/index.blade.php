@@ -1,11 +1,11 @@
 @extends('layout.layout')
-@section('title', 'Order Tiket')
+@section('title', 'Transaksi')
 
 @section('content')
     <div class="container mx-auto px-4 py-8">
         <!-- Header Section -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-indigo-800">Order Tiket Saya</h1>
+            <h1 class="text-3xl font-bold text-indigo-800">Transaksi Tiket Saya</h1>
             <p class="text-gray-600">Daftar tiket yang sudah Anda pesan</p>
         </div>
 
@@ -33,9 +33,9 @@
                             <div class="flex items-center">
                                 @if ($order['Pembayaran'][0]['status_pembayaran'] === 'pending')
                                     <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
-                                        Menunggu Pembayaran
+                                        Menunggu Konfirmasi
                                     </span>
-                                @elseif($order['Pembayaran'][0]['status_pembayaran'] === 'paid')
+                                @elseif($order['Pembayaran'][0]['status_pembayaran'] === 'confirmed')
                                     <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
                                         Sudah Dibayar
                                     </span>
@@ -139,7 +139,7 @@
                             @if ($order['Pembayaran'][0]['status_pembayaran'] === 'pending')
                                 <!-- FORM BATAL DI LUAR FORM UTAMA -->
                                 <form id="delete-form-{{ $order['id'] }}"
-                                    action="{{ route('orders.cancel', ['order_id' => $order['id']]) }}" method="POST">
+                                    action="{{ route('tickets.cancel', ['id' => $order['id']]) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" onclick="confirmCancel({{ $order['id'] }})"
