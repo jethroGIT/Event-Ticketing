@@ -23,7 +23,7 @@ use App\Http\Controllers\TransaksiController;
 |
 */
 
-Route::get('/', [AuthController::class, 'index']);
+Route::get('/', [AuthController::class, 'eventTersedia']);
 Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::get('/signup', [AuthController::class, 'signup'])->name('signup');
 Route::post('/signup', [AuthController::class, 'signupStore'])->name('signup.store');
