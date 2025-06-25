@@ -8,6 +8,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventSessionController;
+use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\TransaksiController;
 
@@ -24,6 +25,8 @@ use App\Http\Controllers\TransaksiController;
 
 Route::get('/', [AuthController::class, 'index']);
 Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::get('/signup', [AuthController::class, 'signup'])->name('signup');
+Route::post('/signup', [AuthController::class, 'signupStore'])->name('signup.store');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -65,6 +68,11 @@ Route::middleware('checkLogin')->group(function () {
     Route::get('/tickets-order', [TransaksiController::class, 'index'])->name('tickets.index');
     Route::delete('/tickets-order/{id}', [TransaksiController::class, 'cancel'])->name('tickets.cancel');
     
+    Route::get('/kehadiran/scan', [KehadiranController::class, 'index'])->name('kehadiran.index');
+    Route::post('/kehadiran/scan', [KehadiranController::class, 'proxy']);
+
+    Route::get('/kehadiran/sertifikat', [KehadiranController::class, 'sertifikatKehadiran'])->name('kehadiran.sertifikat');
+    Route::put('/kehadiran/sertifikat/{id}', [KehadiranController::class, 'uplodSertifikat'])->name('kehadiran.upload');
 });
 
 

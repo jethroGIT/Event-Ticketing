@@ -20,68 +20,92 @@
             </a>
         </li>
 
-        <!-- Roles (for admin) -->
-        <li class="nav-item">
-            <a href="{{ route('roles.index') }}"
-                class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('roles.*') ? 'bg-blue-500/30' : '' }}">
-                <i class="bi bi-shield-lock mr-3 text-lg group-hover:text-blue-100"></i>
-                <span class="font-medium">Roles</span>
-            </a>
-        </li>
+        @if (session('user.role') == 1)
+            <!-- Roles (for admin) -->
+            <li class="nav-item">
+                <a href="{{ route('roles.index') }}"
+                    class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('roles.*') ? 'bg-blue-500/30' : '' }}">
+                    <i class="bi bi-shield-lock mr-3 text-lg group-hover:text-blue-100"></i>
+                    <span class="font-medium">Roles</span>
+                </a>
+            </li>
 
-        <!-- Users -->
-        <li class="nav-item">
-            <a href="{{ route('users.index') }}"
-                class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('users.*') ? 'bg-blue-500/30' : '' }}">
-                <i class="bi bi-people mr-3 text-lg group-hover:text-blue-100"></i>
-                <span class="font-medium">Users</span>
-            </a>
-        </li>
+            <!-- Users -->
+            <li class="nav-item">
+                <a href="{{ route('users.index') }}"
+                    class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('users.*') ? 'bg-blue-500/30' : '' }}">
+                    <i class="bi bi-people mr-3 text-lg group-hover:text-blue-100"></i>
+                    <span class="font-medium">Users</span>
+                </a>
+            </li>
+        @endif
 
-        <!-- Events -->
-        <li class="nav-item">
-            <a href="{{ route('events.index') }}"
-                class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('events.*') ? 'bg-blue-500/30' : '' }}">
-                <i class="bi bi-calendar-event mr-3 text-lg group-hover:text-blue-100"></i>
-                <span class="font-medium">Event</span>
-            </a>
-        </li>
+        @if (session('user.role') == 1 || session('user.role') == 3)
+            <!-- Events -->
+            <li class="nav-item">
+                <a href="{{ route('events.index') }}"
+                    class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('events.*') ? 'bg-blue-500/30' : '' }}">
+                    <i class="bi bi-calendar-event mr-3 text-lg group-hover:text-blue-100"></i>
+                    <span class="font-medium">Event</span>
+                </a>
+            </li>
+        @endif
 
         <!-- Venues -->
-        <li class="nav-item">
-            <a href="{{ route('registrasi.index') }}"
-                class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('attendances.*') ? 'bg-blue-500/30' : '' }}">
-                <i class="bi bi-person-check mr-3 text-lg group-hover:text-blue-100"></i>
-                <span class="font-medium">Registrasi</span>
-            </a>
-        </li>
+        @if (session('user.role') == 1 || session('user.role') == 2 || session('user.role') == 3)
+            <li class="nav-item">
+                <a href="{{ route('registrasi.index') }}"
+                    class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('attendances.*') ? 'bg-blue-500/30' : '' }}">
+                    <i class="bi bi-person-check mr-3 text-lg group-hover:text-blue-100"></i>
+                    <span class="font-medium">Registrasi</span>
+                </a>
+            </li>
+        @endif
 
-        <!-- Tickets -->
-        <li class="nav-item">
-            <a href="{{ route('orders.index') }}"
-                class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('tickets.*') ? 'bg-blue-500/30' : '' }}">
-                <i class="bi bi-ticket-perforated mr-3 text-lg group-hover:text-blue-100"></i>
-                <span class="font-medium">Tickets</span>
-            </a>
-        </li>
+        @if (session('user.role') == 1 || session('user.role') == 4)
+            <!-- Tickets -->
+            <li class="nav-item">
+                <a href="{{ route('orders.index') }}"
+                    class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('tickets.*') ? 'bg-blue-500/30' : '' }}">
+                    <i class="bi bi-ticket-perforated mr-3 text-lg group-hover:text-blue-100"></i>
+                    <span class="font-medium">Tickets</span>
+                </a>
+            </li>
+        @endif
 
         <!-- Orders -->
-        <li class="nav-item">
-            <a href="{{ route('tickets.index') }}"
-                class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('orders.*') ? 'bg-blue-500/30' : '' }}">
-                <i class="bi bi-cart mr-3 text-lg group-hover:text-blue-100"></i>
-                <span class="font-medium">Transaksi</span>
-            </a>
-        </li>
+        @if (session('user.role') == 1 || session('user.role') == 2)
+            <li class="nav-item">
+                <a href="{{ route('tickets.index') }}"
+                    class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('orders.*') ? 'bg-blue-500/30' : '' }}">
+                    <i class="bi bi-cart mr-3 text-lg group-hover:text-blue-100"></i>
+                    <span class="font-medium">Transaksi</span>
+                </a>
+            </li>
+        @endif
+
 
         <!-- Attendance -->
-        <li class="nav-item">
-            <a href=""
-                class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('attendances.*') ? 'bg-blue-500/30' : '' }}">
-                <i class="bi bi-clipboard-check mr-3 text-lg group-hover:text-blue-100"></i>
-                <span class="font-medium">Kehadiran</span>
-            </a>
-        </li>
+        @if (session('user.role') == 1 || session('user.role') == 3)
+            <li class="nav-item">
+                <a href="{{ route('kehadiran.index') }}"
+                    class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('attendances.*') ? 'bg-blue-500/30' : '' }}">
+                    <i class="bi bi-clipboard-check mr-3 text-lg group-hover:text-blue-100"></i>
+                    <span class="font-medium">Kehadiran</span>
+                </a>
+            </li>
+        @endif
+
+        <!-- Sertifikat Kehadiran (Menu Baru) -->
+        @if (session('user.role') == 1 || session('user.role') == 2 || session('user.role') == 3)
+            <li class="nav-item">
+                <a href="{{ route('kehadiran.sertifikat') }}"
+                    class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->routeIs('kehadiran.sertifikat') ? 'bg-blue-500/30' : '' }}">
+                    <i class="bi bi-award mr-3 text-lg group-hover:text-blue-100"></i>
+                    <span class="font-medium">Sertifikat</span>
+                </a>
+            </li>
+        @endif
     </ul>
 
     <!-- Account Section -->

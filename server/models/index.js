@@ -6,6 +6,8 @@ const EventSession = require('./EventSession')(sequelize, Sequelize.DataTypes);
 const Registrasi = require('./Registrasi')(sequelize, Sequelize.DataTypes);
 const Pembayaran = require('./Pembayaran')(sequelize, Sequelize.DataTypes);
 const Tiket = require('./Tiket')(sequelize, Sequelize.DataTypes);
+const Kehadiran = require('./Kehadiran')(sequelize, Sequelize.DataTypes);
+const Sertifikat = require('./Sertifikat')(sequelize, Sequelize.DataTypes);
 console.log(sequelize.models);
 
 
@@ -82,6 +84,30 @@ EventSession.hasMany(Tiket, {
   as: 'Tiket'
 })
 
+// ================ //
+
+Kehadiran.belongsTo(Tiket, {
+  foreignKey: 'tiket_id',
+  as: 'Tiket'
+});
+
+Tiket.hasOne(Kehadiran, {
+  foreignKey: 'tiket_id',
+  as: 'Kehadiran'
+});
+
+// ================ //
+
+Sertifikat.belongsTo(Kehadiran, {
+  foreignKey: 'id_kehadiran',
+  as: 'Kehadiran'
+});
+
+Kehadiran.hasOne(Sertifikat, {
+  foreignKey: 'id_kehadiran',
+  as: 'Sertifikat'
+});
+
 module.exports = {
   sequelize,  // Koneksi database
   Sequelize,  // Kelas Sequelize
@@ -91,5 +117,7 @@ module.exports = {
   EventSession,
   Registrasi,
   Tiket,
-  Pembayaran
+  Pembayaran,
+  Kehadiran,
+  Sertifikat
 };

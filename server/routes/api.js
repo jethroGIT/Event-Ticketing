@@ -9,7 +9,7 @@ const EventsController = require('../controller/EventsController');
 const EventSessionController = require('../controller/EventSessionController');
 const RegistrasiController = require('../controller/RegistrasiController');
 const OrderController = require('../controller/OrderController');
-const QrController = require('../controller/QrController');
+const KehadiranContrller = require('../controller/KehadiranController');
 
 router.get('/login', AuthController.index);
 router.post('/login', AuthController.login);
@@ -51,7 +51,8 @@ router.put('/orders/:id', OrderController.updateTransaksi);
 router.get('/orders-ticket', OrderController.getDetailPesanan);
 router.delete('/orders-ticket/:regis_id', OrderController.destroyPesanan);
 
-
-router.post('/validasi-qr', QrController.validateQRCode);
+router.get('/kehadiran', KehadiranContrller.sertifikatKehadiran);
+router.put('/kehadiran/:id', KehadiranContrller.uploadSertifikat);
+router.post('/validasi-qr', KehadiranContrller.validateQRCode);
 
 module.exports = router;
