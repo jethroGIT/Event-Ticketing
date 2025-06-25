@@ -18,6 +18,7 @@ class RegistrasiController extends Controller
             'search' => $search
         ]);
         $registrasi = $response->json();
+        
         return view('registrasi.index', ['events' => $registrasi]);
     }
 

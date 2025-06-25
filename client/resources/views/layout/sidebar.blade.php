@@ -11,14 +11,6 @@
 
     <!-- Menu Items -->
     <ul class="space-y-0.5 p-3"> <!-- Changed space-y-1 to space-y-0.5 and p-4 to p-3 -->
-        <!-- Dashboard -->
-        <li class="nav-item">
-            <a href="{{ route('dashboard') }}"
-                class="flex items-center p-2 text-white rounded-lg hover:bg-blue-500/30 transition-colors duration-200 group {{ request()->is('dashboard') ? 'bg-blue-500/30' : '' }}">
-                <i class="bi bi-speedometer2 mr-3 text-lg group-hover:text-blue-100"></i>
-                <span class="font-medium">Dashboard</span>
-            </a>
-        </li>
 
         @if (session('user.role') == 1)
             <!-- Roles (for admin) -->

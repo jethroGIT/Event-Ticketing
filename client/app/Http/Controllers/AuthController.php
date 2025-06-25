@@ -34,15 +34,17 @@ class AuthController extends Controller
 
             return redirect()->route('registrasi.index')->with('success', $response->json()['message']);
         }
-        
+
         return redirect()->back()->withErrors(['errors' => $data['message']]);
     }
 
-    public function signup(Request $request) {
+    public function signup(Request $request)
+    {
         return view('auth.signup');
     }
 
-    public function signupStore(Request $request) {
+    public function signupStore(Request $request)
+    {
         $response = Http::post('http://localhost:8000/api/users', [
             'role_id' => 2,
             'email' => $request->email,
@@ -61,6 +63,28 @@ class AuthController extends Controller
         }
 
         return redirect()->route('login')->with('success', 'User berhasil dibuat!');
+    }
+
+    public function eventTersedia(Request $request)
+    {
+        $search = $request->input('search');
+        $response = Http::get('http://localhost:8000/api/registrasi', [
+            'search' => $search
+        ]);
+        
+        // Pastikan response berhasil
+        if ($response->successful()) {
+            $events = $response->json(); // Ini akan mengembalikan array dari JSON response
+
+            return view('auth.event-tersedia', [
+                'events' => $events // Kirim data ke view dengan key 'events'
+            ]);
+        }
+
+        // Jika gagal, kembalikan dengan array kosong
+        return view('auth.event-tersedia', [
+            'events' => []
+        ]);
     }
 
     public function logout()

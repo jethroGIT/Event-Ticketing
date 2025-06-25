@@ -61,36 +61,28 @@ const sertifikatKehadiran = async (req, res) => {
     try {
         const { user_id, role } = req.query;
 
-        let tiketIds = [];
+        let whereRegistrasi = {};
+        if (role === '2') {
+            // Hanya ambil registrasi milik user untuk role member
+            whereRegistrasi = { user_id };
+        }
 
-        if (role === 'admin' || role === 'panitia') {
-            // Ambil SEMUA tiket dari semua registrasi
-            const semua_registrasi = await Registrasi.findAll({
-                include: [
-                    {
-                        model: Tiket,
-                        as: 'Tiket',
-                        attributes: ['id']
-                    }
-                ]
-            });
+        const semua_registrasi = await Registrasi.findAll({
+            where: whereRegistrasi,
+            attributes: ['id'],
+            include: [
+                {
+                    model: Tiket,
+                    as: 'Tiket',
+                    attributes: ['id']
+                }
+            ]
+        });
 
-            tiketIds = semua_registrasi.flatMap(reg => reg.Tiket.map(t => t.id));
-        } else {
-            const user_regis = await Registrasi.findAll({
-                where: { user_id },
-                attributes: ['id'],
-                include: [
-                    {
-                        model: Tiket,
-                        as: 'Tiket',
-                        attributes: ['id'],
-                    }
-                ]
-            });
+        const tiketIds = semua_registrasi.flatMap(reg => reg.Tiket.map(t => t.id));
 
-            tiketIds = user_regis.flatMap(reg => reg.Tiket.map(t => t.id));
-
+        if (tiketIds.length === 0) {
+            return res.status(404).json({ message: 'Tidak ada tiket ditemukan untuk pengguna ini' });
         }
 
         const kehadiran = await Kehadiran.findAll({
@@ -121,28 +113,32 @@ const sertifikatKehadiran = async (req, res) => {
         });
 
         if (kehadiran.length === 0) {
-            return res.status(404).json({ message: 'Tidak ada data kehadiran untuk pengguna ini' });
+            return res.status(404).json({ message: 'Tidak ada data kehadiran ditemukan' });
         }
 
         const sertifikatData = kehadiran.map(item => ({
-            nama_event: item.Tiket.EventSessions?.Events?.nama_event ?? '-',
-            nama_sesi: item.Tiket.EventSessions?.nama_sesi ?? '-',
+            nama_event: item.Tiket?.EventSessions?.Events?.nama_event ?? '-',
+            nama_sesi: item.Tiket?.EventSessions?.nama_sesi ?? '-',
             id_kehadiran: item.id,
             waktu_kehadiran: item.waktu_kehadiran,
             status: item.status,
             sertifikat_url: item.Sertifikat?.sertifikat_url ?? null
         }));
 
-        res.status(200).json({
+        return res.status(200).json({
             message: 'Data sertifikat kehadiran berhasil diambil',
             data: sertifikatData
         });
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Terjadi kesalahan saat memproses sertifikat kehadiran' });
+        return res.status(500).json({
+            message: 'Terjadi kesalahan saat memproses sertifikat kehadiran',
+            error: error.message
+        });
     }
-}
+};
+
 
 const uploadSertifikat = async (req, res) => {
     try {
